@@ -90,13 +90,10 @@ countLetters str =
 
 addLetter : String -> Letters -> Letters
 addLetter letter counts =
-  if Dict.member letter counts then
-    Dict.update letter incrementLetter counts
-  else
-    Dict.insert letter 1 counts
+  Dict.update letter incrementLetter counts
 
 incrementLetter : Maybe Int -> Maybe Int
 incrementLetter num =
   case num of
-    Nothing -> Just 0
+    Nothing -> Just 1
     Just num -> Just (num + 1)
