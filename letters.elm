@@ -2,6 +2,7 @@ import Html exposing (Html, button, div, text, input, p)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
 import Dict exposing (Dict)
+import Round
 
 main =
   Html.beginnerProgram { model = model, view = view, update = update}
@@ -33,9 +34,13 @@ view model =
         count = getCount letter letters
         percentage = toFloat count / toFloat totalChars * 100
       in
-        div [ style [ ("width", (toString percentage) ++ "%"), ("background", "lightblue")]]
+        div
+          [ style
+            [ ("width", (toString percentage) ++ "%")
+            , ("background", "lightblue")
+            ]]
           [ p [] [text letter]
-          , p [] [text (toString percentage ++ "%")]
+          , p [] [text (toString (Round.round 1 percentage) ++ "%")]
           ]
   in
     div []
