@@ -26,8 +26,10 @@ update msg model =
 view : Model -> Html Msg
 view model =
   let
-    letters = countLetters model.content
-    totalChars = String.length model.content
+    clean = cleanInput model.content
+
+    letters = countLetters clean
+    totalChars = String.length clean
 
     simpleDiv letter =
       let
@@ -49,6 +51,22 @@ view model =
       , div [] (List.map simpleDiv (Dict.keys letters))
       ]
 
+cleanInput : String -> String
+cleanInput input =
+  let
+    letters = String.split "" input
+    onlyAlpha = List.filter isAlpha letters
+  in
+    String.join "" onlyAlpha
+
+isAlpha : String -> Bool
+isAlpha str =
+  if str > "a" && str < "z" then
+    True
+  else if str > "A" && str < "Z" then
+    True
+  else
+    False
 
 type alias Letters = Dict String Int
 
