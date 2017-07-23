@@ -34,7 +34,12 @@ view model =
     totalChars = String.length clean
 
   in
-    div []
+    div
+      [ style
+        [ ("width", "100%")
+        , ("max-width", "720px")
+        , ("margin", "0 auto")
+        ]]
       [ input [ placeholder "type some shit", onInput Change, style [("width", "100%")] ] []
       , div [] [text ("total letters: " ++ toString totalChars)]
       , lettersChart letterToCount
