@@ -23,6 +23,8 @@ update msg model =
     Change newContent ->
       { model | content = newContent }
 
+-- VIEWS
+
 view : Model -> Html Msg
 view model =
   let
@@ -31,15 +33,28 @@ view model =
     letterToCount = countLetters clean
     totalChars = String.length clean
 
+  in
+    div []
+      [ input [ placeholder "type some shit", onInput Change, style [("width", "100%")] ] []
+      , div [] [text ("total letters: " ++ toString totalChars)]
+      , lettersChart letterToCount
+      ]
+
+lettersChart : Letters -> Html Msg
+lettersChart letterToCount =
+  let
     letters = Dict.keys letterToCount
+
+    letterCountsList = List.map (\n -> getCount n letterToCount) letters
+    totalChars = List.sum letterCountsList
+
     highestCount =
       let
-        highestCount = List.maximum (List.map (\n -> getCount n letterToCount) letters)
+        highestCount = List.maximum letterCountsList
       in
         case highestCount of
           Nothing -> 0
           Just highestCount -> highestCount
-
     simpleDiv letter =
       let
         count = getCount letter letterToCount
@@ -54,12 +69,11 @@ view model =
           [ p [] [text letter]
           , p [] [text (toString (Round.round 1 percentage) ++ "%")]
           ]
+
   in
-    div []
-      [ input [ placeholder "type some shit", onInput Change, style [("width", "100%")] ] []
-      , div [] [text ("total letters: " ++ toString totalChars)]
-      , div [] (List.map simpleDiv letters)
-      ]
+    div [] (List.map simpleDiv letters)
+
+--
 
 cleanInput : String -> String
 cleanInput input =
