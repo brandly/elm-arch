@@ -55,23 +55,32 @@ lettersChart letterToCount =
         case highestCount of
           Nothing -> 0
           Just highestCount -> highestCount
-    simpleDiv letter =
+    width = 100 / toFloat (List.length letters)
+    column letter =
       let
         count = getCount letter letterToCount
         percentage = toFloat count / toFloat totalChars * 100
-        width = toFloat count / toFloat highestCount * 100
+        height = toFloat count / toFloat highestCount * 100
       in
         div
           [ style
-            [ ("width", (toString width) ++ "%")
+            [ ("height", (toString height) ++ "%")
+            , ("width", (toString width) ++ "%")
             , ("background", "lightblue")
+            , ("display", "inline-block")
+            , ("vertical-align", "bottom")
             ]]
           [ p [] [text letter]
           , p [] [text (toString (Round.round 1 percentage) ++ "%")]
           ]
 
   in
-    div [] (List.map simpleDiv letters)
+    div
+      [ style
+        [ ("width", "100%")
+        , ("height", "100vh")
+      ]]
+      (List.map column letters)
 
 --
 
