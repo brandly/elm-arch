@@ -28,17 +28,27 @@ view model =
   let
     clean = cleanInput model.content
 
-    letters = countLetters clean
+    letterToCount = countLetters clean
     totalChars = String.length clean
+
+    letters = Dict.keys letterToCount
+    highestCount =
+      let
+        highestCount = List.maximum (List.map (\n -> getCount n letterToCount) letters)
+      in
+        case highestCount of
+          Nothing -> 0
+          Just highestCount -> highestCount
 
     simpleDiv letter =
       let
-        count = getCount letter letters
+        count = getCount letter letterToCount
         percentage = toFloat count / toFloat totalChars * 100
+        width = toFloat count / toFloat highestCount * 100
       in
         div
           [ style
-            [ ("width", (toString percentage) ++ "%")
+            [ ("width", (toString width) ++ "%")
             , ("background", "lightblue")
             ]]
           [ p [] [text letter]
@@ -46,9 +56,9 @@ view model =
           ]
   in
     div []
-      [ input [ placeholder "type some shit", onInput Change ] []
+      [ input [ placeholder "type some shit", onInput Change, style [("width", "100%")] ] []
       , div [] [text ("total letters: " ++ toString totalChars)]
-      , div [] (List.map simpleDiv (Dict.keys letters))
+      , div [] (List.map simpleDiv letters)
       ]
 
 cleanInput : String -> String
