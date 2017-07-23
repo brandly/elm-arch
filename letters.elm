@@ -1,4 +1,4 @@
-import Html exposing (Html, button, div, text, input, p)
+import Html exposing (Html, button, div, text, textarea, p)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
 import Dict exposing (Dict)
@@ -40,7 +40,10 @@ view model =
         , ("max-width", "720px")
         , ("margin", "0 auto")
         ]]
-      [ input [ placeholder "type some shit", onInput Change, style [("width", "100%")] ] []
+      [ textarea
+        [ placeholder "type some shit"
+        , onInput Change
+        , style [("width", "100%")] ] []
       , div [] [text ("total letters: " ++ toString totalChars)]
       , lettersChart letterToCount
       ]
