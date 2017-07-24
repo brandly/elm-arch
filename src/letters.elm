@@ -113,7 +113,7 @@ lettersChart letterToCount selectedLetter =
 
                 label =
                     if selectedLetter == letter then
-                        toString (Round.round 1 percentage) ++ "%"
+                        Round.round 1 percentage ++ "%"
                     else
                         letter
 
