@@ -3,7 +3,7 @@ module Main exposing (..)
 import Dict exposing (Dict)
 import Html exposing (Html, button, div, p, text, textarea)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onInput)
+import Html.Events exposing (onInput, onMouseOver, onMouseOut)
 import Round
 
 
@@ -13,16 +13,20 @@ main =
 
 type alias Model =
     { content : String
+    , selectedLetter : String
     }
 
 
 model : Model
 model =
-    { content = "" }
+    { content = ""
+    , selectedLetter = ""
+    }
 
 
 type Msg
     = Change String
+    | Select String
 
 
 update : Msg -> Model -> Model
@@ -30,6 +34,9 @@ update msg model =
     case msg of
         Change newContent ->
             { model | content = newContent }
+
+        Select letter ->
+            { model | selectedLetter = letter }
 
 
 
@@ -62,12 +69,12 @@ view model =
             ]
             []
         , div [] [ text ("total letters: " ++ toString totalChars) ]
-        , lettersChart letterToCount
+        , lettersChart letterToCount model.selectedLetter
         ]
 
 
-lettersChart : Letters -> Html Msg
-lettersChart letterToCount =
+lettersChart : Letters -> String -> Html Msg
+lettersChart letterToCount selectedLetter =
     let
         letters =
             Dict.keys letterToCount
@@ -103,6 +110,13 @@ lettersChart letterToCount =
 
                 height =
                     toFloat count / toFloat highestCount * 100
+
+                label =
+                    if selectedLetter == letter then
+                        toString (Round.round 1 percentage) ++ "%"
+                    else
+                        letter
+
             in
             div
                 [ style
@@ -112,9 +126,10 @@ lettersChart letterToCount =
                     , ( "display", "inline-block" )
                     , ( "vertical-align", "bottom" )
                     ]
+                , onMouseOver (Select letter)
+                , onMouseOut (Select "")
                 ]
-                [ p [] [ text letter ]
-                , p [] [ text (toString (Round.round 1 percentage) ++ "%") ]
+                [ p [ style [("text-align", "center")] ] [ text label ]
                 ]
     in
     div
